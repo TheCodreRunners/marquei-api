@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Record" ALTER COLUMN "url" DROP NOT NULL,
+ALTER COLUMN "awsKey" DROP NOT NULL;

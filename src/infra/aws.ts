@@ -7,6 +7,7 @@ import {
   SendMessageCommand,
   ReceiveMessageCommand,
   SQSClient,
+  DeleteMessageCommand,
 } from '@aws-sdk/client-sqs';
 
 export class SqsWrapper {
@@ -15,14 +16,14 @@ export class SqsWrapper {
 
   constructor() {
     this.s3 = new S3Client({
-      region: process.env.AWS_REGION,
+      region: process.env.AWS_DEFAULT_REGION,
       credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
       },
     });
     this.sqs = new SQSClient({
-      region: process.env.AWS_REGION,
+      region: process.env.AWS_DEFAULT_REGION,
       credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -30,12 +31,13 @@ export class SqsWrapper {
     });
   }
 
-  async sendMessage(message: string, queueUrl: string) {
+  async sendMessage(message: Record<string, any>, queueUrl: string) {
+    const stringifiedMessage = this.stringifyMessage(message);
     try {
       await this.sqs.send(
         new SendMessageCommand({
           QueueUrl: queueUrl,
-          MessageBody: message,
+          MessageBody: stringifiedMessage,
         }),
       );
     } catch (error) {
@@ -50,7 +52,22 @@ export class SqsWrapper {
           QueueUrl: queueUrl,
         }),
       );
-      return data.Messages;
+      const messages = data?.Messages;
+      if (!messages) return;
+      return messages?.map((message) => JSON.parse(message.Body));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async deleteMessage(queueUrl: string, receiptHandle: string) {
+    try {
+      await this.sqs.send(
+        new DeleteMessageCommand({
+          QueueUrl: queueUrl,
+          ReceiptHandle: receiptHandle,
+        }),
+      );
     } catch (error) {
       console.error(error);
     }
@@ -81,5 +98,9 @@ export class SqsWrapper {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  private stringifyMessage(message: Record<string, any>) {
+    return JSON.stringify(message);
   }
 }
