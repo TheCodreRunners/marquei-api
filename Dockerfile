@@ -41,7 +41,9 @@ ENV NODE_ENV=production
 RUN prisma generate && prisma migrate deploy
 
 # Expor a porta padrão do NestJS
-EXPOSE 3000
+ARG PORT
+ENV PORT=${PORT}
+EXPOSE ${PORT}
 
 # Comando para iniciar a aplicação
 CMD ["node", "dist/main"]

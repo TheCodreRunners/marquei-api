@@ -6,7 +6,7 @@ services:
     env_file:
       - stack.env
     ports:
-      - "3001:3001"
+      - "${PORT}:${PORT}"
     volumes:
       - .:/app
     networks:
