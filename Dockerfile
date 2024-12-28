@@ -2,7 +2,7 @@
 FROM node:18-alpine AS builder
 
 # Diretório de trabalho para o build
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Copiar apenas os arquivos necessários para instalar dependências
 COPY package*.json ./
@@ -23,7 +23,7 @@ RUN npm run build
 FROM node:18-alpine
 
 # Diretório de trabalho da aplicação
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Copiar apenas os arquivos necessários para rodar em produção
 COPY package*.json ./
