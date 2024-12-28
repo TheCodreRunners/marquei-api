@@ -1,5 +1,6 @@
 import {
   DeleteObjectCommand,
+  GetObjectCommand,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
@@ -9,6 +10,7 @@ import {
   SQSClient,
   DeleteMessageCommand,
 } from '@aws-sdk/client-sqs';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 export class SqsWrapper {
   private readonly s3: S3Client;
@@ -16,6 +18,8 @@ export class SqsWrapper {
 
   constructor() {
     this.s3 = new S3Client({
+      forcePathStyle: true,
+      endpoint: process.env.AWS_BUCKET_URL,
       region: process.env.AWS_DEFAULT_REGION,
       credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -106,6 +110,47 @@ export class SqsWrapper {
       );
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  async createSignedUrl(bucket: string, key: string) {
+    try {
+      const command = new GetObjectCommand({
+        Bucket: bucket,
+        Key: key,
+      });
+
+      const presigned = await getSignedUrl(this.s3, command, {
+        expiresIn: 3600,
+      });
+
+      return presigned;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async getOrCreateSignedUrl(bucket: string, key: string) {
+    try {
+      const command = new GetObjectCommand({
+        Bucket: bucket,
+        Key: key,
+      });
+
+      await this.s3.send(command);
+
+      const presigned = await getSignedUrl(this.s3, command, {
+        expiresIn: 3600,
+      });
+
+      console.log(presigned);
+      return presigned;
+    } catch (error) {
+      if (error.name === 'NoSuchKey') {
+        console.log('Arquivo não encontrado.');
+      } else {
+        console.error(error);
+      }
     }
   }
 

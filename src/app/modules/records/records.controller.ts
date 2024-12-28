@@ -44,4 +44,9 @@ export class RecordsController {
   remove(@Param('id') id: string) {
     return this.recordsService.remove(+id);
   }
+
+  @Get('video-url/:key')
+  getVideoUrl(@Param('key') key: number) {
+    return this.recordsService.getVideoUrl(key);
+  }
 }

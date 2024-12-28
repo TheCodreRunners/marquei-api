@@ -107,4 +107,25 @@ export class RecordsService {
       where: { id },
     });
   }
+
+  async getVideoUrl(id: number) {
+    const record = await this.prisma.record.findUnique({
+      where: { id: +id },
+    });
+
+    if (!record?.id) {
+      throw new Error('Record not found or File not uploaded');
+    }
+
+    const url = await this.sqsWrapper.getOrCreateSignedUrl(
+      process.env.AWS_BUCKET,
+      record.awsKey,
+    );
+    await this.prisma.record.update({
+      where: { id: +id },
+      data: { url },
+    });
+
+    return url;
+  }
 }
