@@ -3,6 +3,7 @@ services:
   api:
     build: .
     container_name: gravacoes_api
+    working_dir: /app
     env_file:
       - stack.env
     ports:
