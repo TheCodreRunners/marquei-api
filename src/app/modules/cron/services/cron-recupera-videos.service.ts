@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { EVERY_40_SECONDS, EVERY_5_SECONDS } from 'src/common/enum/EnumCron';
-import { PrismaService } from 'src/config/prisma/prisma.service';
-import { SqsWrapper } from 'src/infra/aws';
+import {
+  EVERY_40_SECONDS,
+  EVERY_5_SECONDS,
+} from 'src/app/common/enum/EnumCron';
+import { PrismaService } from 'src/app/modules/config/prisma/prisma.service';
+import { SqsWrapper } from 'src/app/infra/aws';
 
 @Injectable()
 export class CronRecoverVideosService {
@@ -28,7 +31,7 @@ export class CronRecoverVideosService {
       console.log('aa', queuedVideos);
       if (!queuedVideos) return;
 
-      for (const video of queuedVideos) {
+      for (const video of queuedVideos.data) {
         const { camera, data, url, key } = video;
 
         const court = await this.prisma.court.findUnique({
@@ -46,7 +49,7 @@ export class CronRecoverVideosService {
 
         await this.sqsWrapper.deleteMessage(
           process.env.AWS_QUEUE_URL_SAVE_VIDEO,
-          video.receiptHandle,
+          queuedVideos.receiptHandles,
         );
       }
     } catch (error) {

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRecordDto } from './dto/create-record.dto';
 import { UpdateRecordDto } from './dto/update-record.dto';
-import { PrismaService } from 'src/config/prisma/prisma.service';
+import { PrismaService } from 'src/app/modules/config/prisma/prisma.service';
 import { format } from 'date-fns';
-import { SqsWrapper } from 'src/infra/aws';
+import { SqsWrapper } from 'src/app/infra/aws';
 
 @Injectable()
 export class RecordsService {

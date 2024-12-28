@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  api:
+    build: .
+    container_name: gravacoes_api
+    env_file:
+      - stack.env
+    ports:
+      - "3001:3001"
+    volumes:
+      - .:/app
+    networks:
+      - gravacoes_network
+    environment:
+      NODE_ENV: production
+
+networks:
+  gravacoes_network:
+    driver: bridge

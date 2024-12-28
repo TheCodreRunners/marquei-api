@@ -50,24 +50,46 @@ export class SqsWrapper {
       const data = await this.sqs.send(
         new ReceiveMessageCommand({
           QueueUrl: queueUrl,
+          MaxNumberOfMessages: 10,
+          WaitTimeSeconds: 20,
         }),
       );
-      const messages = data?.Messages;
-      if (!messages) return;
-      return messages?.map((message) => JSON.parse(message.Body));
+      if (!data.Messages) return;
+
+      const parsedMessages = data.Messages.map((message) =>
+        JSON.parse(message.Body),
+      );
+      const receiptHandles = data.Messages.map(
+        (message) => message.ReceiptHandle,
+      );
+
+      return { data: parsedMessages, receiptHandles };
     } catch (error) {
-      console.error(error);
+      console.error('Error receiving messages:', error);
+      throw error;
     }
   }
 
-  async deleteMessage(queueUrl: string, receiptHandle: string) {
+  async deleteMessage(queueUrl: string, receiptHandle: string | string[]) {
+    console.log(receiptHandle);
     try {
-      await this.sqs.send(
-        new DeleteMessageCommand({
-          QueueUrl: queueUrl,
-          ReceiptHandle: receiptHandle,
-        }),
-      );
+      if (Array.isArray(receiptHandle)) {
+        for (const handle of receiptHandle) {
+          await this.sqs.send(
+            new DeleteMessageCommand({
+              QueueUrl: queueUrl,
+              ReceiptHandle: handle,
+            }),
+          );
+        }
+      } else {
+        await this.sqs.send(
+          new DeleteMessageCommand({
+            QueueUrl: queueUrl,
+            ReceiptHandle: receiptHandle,
+          }),
+        );
+      }
     } catch (error) {
       console.error(error);
     }
