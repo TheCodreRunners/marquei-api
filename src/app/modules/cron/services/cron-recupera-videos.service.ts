@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import {
-  EVERY_40_SECONDS,
-  EVERY_5_SECONDS,
-} from 'src/app/common/enum/EnumCron';
+import { EVERY_60_MINUTES } from 'src/app/common/enum/EnumCron';
 import { PrismaService } from 'src/app/modules/config/prisma/prisma.service';
 import { SqsWrapper } from 'src/app/infra/aws';
 
@@ -14,11 +11,11 @@ export class CronRecoverVideosService {
     private readonly sqsWrapper: SqsWrapper,
   ) {}
 
-  @Cron(EVERY_5_SECONDS, { name: 'GET_PROCESSED_VIDEOS' })
+  @Cron(EVERY_60_MINUTES, { name: 'GET_PROCESSED_VIDEOS' })
   public async getProcessedVideos(): Promise<void> {
     console.log('getProcessedVideos');
     try {
-      const IsCronActive = this.prisma.cronControl.findFirst({
+      const IsCronActive = await this.prisma.cronControl.findFirst({
         where: {
           name: 'GET_PROCESSED_VIDEOS',
         },
