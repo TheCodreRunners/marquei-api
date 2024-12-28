@@ -11,7 +11,7 @@ COPY nest-cli.json ./
 COPY prisma ./prisma/
 
 # Instalar as dependências do projeto
-RUN npm install --production=false
+RUN npm install
 
 # Copiar os arquivos da aplicação
 COPY . .
@@ -27,10 +27,11 @@ WORKDIR /usr/src/app
 
 # Copiar apenas os arquivos necessários para rodar em produção
 COPY package*.json ./
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/stack.env ./.env
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/prisma ./prisma
+COPY --from=builder /usr/src/app/stack.env ./.env
+
 # Instalar o Prisma CLI
 RUN npm install -g prisma
 
