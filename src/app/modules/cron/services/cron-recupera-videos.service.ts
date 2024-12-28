@@ -13,7 +13,6 @@ export class CronRecoverVideosService {
 
   @Cron(EVERY_60_MINUTES, { name: 'GET_PROCESSED_VIDEOS' })
   public async getProcessedVideos(): Promise<void> {
-    console.log('getProcessedVideos');
     try {
       const IsCronActive = await this.prisma.cronControl.findFirst({
         where: {
