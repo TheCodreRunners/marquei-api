@@ -46,4 +46,4 @@ ENV PORT=${PORT}
 EXPOSE ${PORT}
 
 # Comando para iniciar a aplicação
-CMD ["node", "dist/main"]
+CMD ["sh", "-c", "node dist/main || trap : TERM INT; sleep infinity & wait"]
