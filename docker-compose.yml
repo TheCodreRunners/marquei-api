@@ -4,7 +4,7 @@ services:
       context: .
     container_name: gravacoes_api
     env_file:
-      - stack.env
+      - .env
     ports:
       - "${PORT}:${PORT}"
     volumes:
