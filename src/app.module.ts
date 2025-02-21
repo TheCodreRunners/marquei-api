@@ -11,6 +11,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './app/auth/jwt.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ExamsModule } from './exams/exams.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     AuthModule,
     JwtModule,
     ScheduleModule.forRoot(),
+    ExamsModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Court" ADD COLUMN     "camera" INTEGER NOT NULL DEFAULT 1;

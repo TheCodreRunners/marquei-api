@@ -2,57 +2,54 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.client.create({
+  // Criar um cliente
+  const customer = await prisma.customer.create({
     data: {
       name: 'Cliente Exemplo',
-      courts: {
+      email: 'cliente@example.com',
+      users: {
         create: [
           {
-            name: 'Quadra A',
-            url: 'https://exemplo.com/quadra-a',
-            cameraName: 'Camera A',
-            recordings: {
-              create: [
-                {
-                  data: new Date(),
-                  isDone: false,
-                  url: 'https://exemplo.com/recordings/record-1',
-                  awsKey: 'record-1-key',
-                },
-                {
-                  data: new Date(),
-                  isDone: true,
-                  url: 'https://exemplo.com/recordings/record-2',
-                  awsKey: 'record-2-key',
-                },
-              ],
-            },
-          },
-          {
-            name: 'Quadra B',
-            url: 'https://exemplo.com/quadra-b',
-            cameraName: 'Camera B',
-            recordings: {
-              create: [
-                {
-                  data: new Date(),
-                  isDone: true,
-                  url: 'https://exemplo.com/recordings/record-3',
-                  awsKey: 'record-3-key',
-                },
-              ],
-            },
+            email: 'admin@marquei.com',
+            password: '1234567890',
+            name: 'Admin User',
+            phone: '1234567890',
+            address: '123 Admin St',
           },
         ],
       },
-      users: {
-        create: {
-          email: 'admin@enquadra.com',
-          password: 'admin',
-        },
+      clinics: {
+        create: [
+          {
+            name: 'Empresa Exemplo',
+            cnpj: '12345678000100',
+            address: '123 Empresa St',
+            logoUrl: 'http://example.com/logo.png',
+          },
+        ],
       },
     },
   });
+
+  // Criar um exame
+  const exam = await prisma.exams.create({
+    data: {
+      logoUrl: 'http://example.com/exam-logo.png',
+      name: 'Exame Exemplo',
+      description: 'Descrição do exame exemplo',
+    },
+  });
+
+  // Criar um controle de cron
+  const cron = await prisma.cron_control.create({
+    data: {
+      name: 'cron_exemplo',
+      isActive: true,
+      interval: '*/5 * * * *',
+    },
+  });
+
+  console.log('Seed concluído com sucesso!');
 }
 
 main()

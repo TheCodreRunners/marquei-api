@@ -20,7 +20,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     super();
   }
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    console.log('JwtGuard');
     const request = context.switchToHttp().getRequest();
     const isPublic = this.reflector.get<boolean>(
       'isPublic',

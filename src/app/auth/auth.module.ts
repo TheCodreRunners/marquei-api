@@ -9,7 +9,11 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 @Module({
   imports: [
-    PassportModule,
+    PassportModule.register({
+      defaultStrategy: 'jwt',
+      property: 'user',
+      session: false,
+    }),
     JwtModule.registerAsync({
       extraProviders: [],
       useFactory: () => ({
