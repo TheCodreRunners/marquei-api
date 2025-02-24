@@ -1,5 +1,3 @@
-# syntax = docker/dockerfile:1.2
-
 # Etapa 1: Build da aplicação
 FROM node:18-alpine AS builder
 
@@ -33,18 +31,12 @@ COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/prisma ./prisma
 
+
 # Instalar o Prisma CLI
 RUN npm install -g prisma
 
 # Definir variável de ambiente para produção
 ENV NODE_ENV=production
-
-# Montar o Secret File do Docker
-RUN --mount=type=secret,id=env,dst=/etc/secrets/.env cat /etc/secrets/.env
-
-# Carregar as variáveis do Secret File
-RUN --mount=type=secret,id=env,dst=/etc/secrets/.env \
-    export $(grep -v '^#' /etc/secrets/.env | xargs)
 
 # Rodar as migrações do Prisma
 RUN prisma generate && prisma migrate deploy
