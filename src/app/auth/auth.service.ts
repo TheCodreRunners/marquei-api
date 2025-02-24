@@ -46,7 +46,6 @@ export class AuthService {
         name: 'Default Name',
         phone: '000-000-0000',
         address: 'Default Address',
-        clientId: 1,
       },
     });
   }

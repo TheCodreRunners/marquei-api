@@ -51,8 +51,8 @@ model user {
   password  String
   phone     String
   address   String
-  clientId  Int
-  client    client   @relation(fields: [clientId], references: [id])
+  clientId  Int?
+  client    client?  @relation(fields: [clientId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
