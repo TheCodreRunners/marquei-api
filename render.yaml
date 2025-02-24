@@ -1,21 +1,64 @@
+# Exported from Render on 2025-02-24T21:47:47Z
 services:
-  - name: gravacoes-api
-    type: web
-    runtime: node
-    region: oregon  # Altere para a região desejada
-    plan: starter  # Ou outro plano disponível
-    buildCommand: |
-      npm install
-      npm run build
-    startCommand: node dist/main
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: DATABASE_URL
-        sync: false  # Defina como true se deseja sincronizar do ambiente do Render
-      - key: PORT
-        value: "3000"  # Ou outra porta conforme necessário
-    disk:
-      name: prisma_data
-      mountPath: /usr/src/app/prisma
-      sizeGB: 1  # Ajuste conforme necessário
+- type: web
+  name: marquei-api
+  runtime: docker
+  repo: https://github.com/TheCodreRunners/marquei-api
+  plan: free
+  envVars:
+  - key: AWS_BUCKET
+    sync: false
+  - key: JWT_SECRET
+    sync: false
+  - key: PORT
+    sync: false
+  - key: AWS_BUCKET_URL
+    sync: false
+  - key: MINUTE_TO_REQUEUE
+    sync: false
+  - key: SERVER_URL
+    sync: false
+  - key: AWS_ENDPOINT_URL
+    sync: false
+  - key: AWS_QUEUE_URL_SAVE_VIDEO
+    sync: false
+  - key: AWS_QUEUE_URL_PROCESS
+    sync: false
+  - key: AWS_DEFAULT_REGION
+    sync: false
+  - key: AWS_SECRET_ACCESS_KEY
+    sync: false
+  - key: AWS_ACCESS_KEY_ID
+    sync: false
+  - key: DATABASE_URL
+    sync: false
+  - key: DATABASE_URL
+    sync: false
+  - key: AWS_BUCKET
+    sync: false
+  - key: JWT_SECRET
+    sync: false
+  - key: PORT
+    sync: false
+  - key: AWS_BUCKET_URL
+    sync: false
+  - key: MINUTE_TO_REQUEUE
+    sync: false
+  - key: SERVER_URL
+    sync: false
+  - key: AWS_ENDPOINT_URL
+    sync: false
+  - key: AWS_QUEUE_URL_SAVE_VIDEO
+    sync: false
+  - key: AWS_QUEUE_URL_PROCESS
+    sync: false
+  - key: AWS_DEFAULT_REGION
+    sync: false
+  - key: AWS_SECRET_ACCESS_KEY
+    sync: false
+  - key: AWS_ACCESS_KEY_ID
+    sync: false
+  region: oregon
+  dockerContext: .
+  dockerfilePath: ./Dockerfile
+version: "1"
