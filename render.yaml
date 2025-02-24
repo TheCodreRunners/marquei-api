@@ -1,0 +1,21 @@
+services:
+  - name: gravacoes-api
+    type: web
+    runtime: node
+    region: oregon  # Altere para a região desejada
+    plan: starter  # Ou outro plano disponível
+    buildCommand: |
+      npm install
+      npm run build
+    startCommand: node dist/main
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false  # Defina como true se deseja sincronizar do ambiente do Render
+      - key: PORT
+        value: "3000"  # Ou outra porta conforme necessário
+    disk:
+      name: prisma_data
+      mountPath: /usr/src/app/prisma
+      sizeGB: 1  # Ajuste conforme necessário
