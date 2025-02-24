@@ -9,7 +9,7 @@ export class ClientService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createClientDto: CreateClientDto) {
-    return await this.prisma.client.create({
+    return await this.prisma.clinic.create({
       data: createClientDto,
     });
   }
@@ -17,7 +17,7 @@ export class ClientService {
   async findAll() {
     return await this.prisma.client.findMany({
       include: {
-        courts: true,
+        clinics: true,
       },
     });
   }
@@ -26,7 +26,7 @@ export class ClientService {
     return await this.prisma.client.findUnique({
       where: { id },
       include: {
-        courts: true,
+        clinics: true,
       },
     });
   }

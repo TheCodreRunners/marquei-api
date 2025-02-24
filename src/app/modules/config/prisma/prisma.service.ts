@@ -6,7 +6,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
   async onModuleInit() {
     await this.$connect();
     this.$use(async (params, next) => {
-      if (params.model === 'User') {
+      if ((params.model as string) === 'User') {
         if (params.action === 'create' || params.action === 'update') {
           const user = params.args.data;
 

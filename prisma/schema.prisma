@@ -8,7 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model customer {
+model client {
   id        Int       @id @default(autoincrement())
   name      String
   email     String
@@ -22,8 +22,8 @@ model clinic {
   cnpj     String  @unique
   address  String
   logoUrl  String?
-  customerId Int
-  customer   customer  @relation(fields: [customerId], references: [id])
+  clientId Int
+  client   client  @relation(fields: [clientId], references: [id])
 }
 
 model cron_control {
@@ -51,8 +51,8 @@ model user {
   password  String
   phone     String
   address   String
-  customerId  Int
-  customer    customer   @relation(fields: [customerId], references: [id])
+  clientId  Int
+  client    client   @relation(fields: [clientId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

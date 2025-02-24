@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { PrismaService } from 'src/app/modules/config/prisma/prisma.service';
@@ -39,6 +43,9 @@ export class AuthService {
       data: {
         email: body.email,
         password: body.password,
+        name: 'Default Name',
+        phone: '000-000-0000',
+        address: 'Default Address',
         clientId: 1,
       },
     });
