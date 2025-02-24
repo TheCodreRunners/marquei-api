@@ -31,12 +31,18 @@ COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/prisma ./prisma
 
-
 # Instalar o Prisma CLI
 RUN npm install -g prisma
 
 # Definir variável de ambiente para produção
 ENV NODE_ENV=production
+
+# Definir caminho do arquivo secreto no Render
+ARG SECRET_FILE_PATH="/etc/secrets/.env"
+ENV SECRET_FILE_PATH=$SECRET_FILE_PATH
+
+# Carregar as variáveis do Secret File (se existir)
+RUN if [ -f "$SECRET_FILE_PATH" ]; then export $(grep -v '^#' $SECRET_FILE_PATH | xargs); fi
 
 # Rodar as migrações do Prisma
 RUN prisma generate && prisma migrate deploy
