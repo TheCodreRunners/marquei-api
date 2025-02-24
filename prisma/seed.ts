@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   // Criar um cliente
-  const customer = await prisma.customer.create({
+  const customer = await prisma.client.create({
     data: {
       name: 'Cliente Exemplo',
       email: 'cliente@example.com',
